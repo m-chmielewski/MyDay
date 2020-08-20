@@ -25,6 +25,11 @@
   margin: 2px 4px;
 }
 
+.log-out-btn {
+  position: fixed;
+  bottom: 10px;
+}
+
 /*
 .top-bar {
   position: fixed;
@@ -103,7 +108,8 @@
 .card-data-container {
   height: 100%;
   background-color: white;
-  width: 80%
+  width: 80%;
+  padding: 5px;
 }
 
 .card-buttons-container {
