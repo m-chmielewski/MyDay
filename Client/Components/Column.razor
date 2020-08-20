@@ -1,0 +1,54 @@
+﻿@inject TasksClient TC
+@inject PresentationController PC
+
+<div class="today-column" style="width: @PC.ColumnWidth">
+    <div class="column-header-wrapper">
+        <MatH5>@ColumnTitle</MatH5>
+    </div>
+
+    <div class="column-content-wrapper">
+        @if (AllTasks != null)
+        {
+            @foreach (var task in Tasks)
+            {
+                <TaskCard Element="task" />
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ColumnTitle { get; set; }
+
+    public List<TaskModel> AllTasks { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PC.OnTaskChange += StateHasChanged;
+    }
+
+    protected override void OnParametersSet()
+    {
+        AllTasks = TC.AllTasks;
+    }
+
+    public List<TaskModel> Tasks
+    {
+        get
+        {
+            if (ColumnTitle == "ToDo")
+                return AllTasks.Where(x => x.State == TaskState.ToDo).ToList();
+            if (ColumnTitle == "Blockers")
+                return AllTasks.Where(x => x.State == TaskState.Blocker).ToList();
+            else if (ColumnTitle == "Blocked")
+                return AllTasks.Where(x => x.State == TaskState.Blocked).ToList();
+            else if (ColumnTitle == "Done")
+                return AllTasks.Where(x => x.State == TaskState.Done).ToList();
+            else
+                return new List<TaskModel>();
+        }
+    }
+}
+

@@ -1,0 +1,114 @@
+﻿@page "/"
+@inject PresentationController PC
+@inject TasksClient TC
+
+    <AuthorizeView>
+        <Authorized>
+            <div class="index-header-section">
+                <div class="index-header-text-wrapper">
+                    <MatH4>@PC.IndexTitle</MatH4>
+                </div>
+                <MatButton Class="new-task-btn" Unelevated="true" Label="New task" @onclick="OpenAddDialog" />
+            </div>
+
+
+            @if (TC.AllTasks == null)
+            {
+<strong>Loading...</strong> }
+else
+{
+@if (PC.ShowingBacklog)
+{
+<Backlog /> }
+else
+{
+<Today />}}
+        </Authorized>
+        <NotAuthorized>
+            <LandingPage />
+        </NotAuthorized>
+    </AuthorizeView>
+
+    <MatDialog @bind-IsOpen="@PC.AddDialogOpen">
+        <MatDialogTitle>Add new task</MatDialogTitle>
+        <MatDialogContent>
+            <MatStringField Label="Title" @bind-Value="@Title"></MatStringField>
+            <MatStringField Label="Notes" @bind-Value="@Notes"></MatStringField>
+            <MatSelectItem @bind-Value="Target" Items="@TargetOptions">
+            </MatSelectItem>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => { PC.AddDialogOpen = false; })">No Thanks</MatButton>
+            <MatButton OnClick="() => OkClick(false)">OK</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+
+    <MatDialog @bind-IsOpen="@PC.BlockerDialogOpen">
+        <MatDialogTitle>Add new blocker</MatDialogTitle>
+        <MatDialogContent>
+            <MatStringField Label="Title" @bind-Value="@Title"></MatStringField>
+            <MatStringField ReadOnly="true" Label="Blocked" Value="@(PC.BlockedTask == null ? "" : PC.BlockedTask.Title)"></MatStringField>
+            <MatStringField TextArea="true" Label="Notes" @bind-Value="@Notes" FullWidth="true"></MatStringField>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => { PC.BlockerDialogOpen = false; })">No Thanks</MatButton>
+            <MatButton OnClick="@AddNextClicked">Add next</MatButton>
+            <MatButton OnClick="() => OkClick(true)">OK</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+
+
+
+    @code{ string Title { get; set; }
+        public string Notes { get; set; }
+        public TaskState Target { get; set; }
+        public TaskState[] TargetOptions { get; set; } = Enum.GetValues(typeof(TaskState)).Cast<TaskState>().ToArray();
+        public List<TaskModel> AllTasks { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+            PC.OnViewSwitch += StateHasChanged;
+            PC.OnTaskChange += StateHasChanged;
+            AllTasks = await TC.GetTasks();
+        }
+
+        void OpenAddDialog()
+        {
+            Target = PC.DefaultTarget;
+            PC.AddDialogOpen = true;
+        }
+
+        public async Task AddNewTask(bool isBlocker)
+        {
+            TaskModel newTask = new TaskModel();
+            newTask.Title = Title;
+            newTask.Notes = Notes;
+
+            if (isBlocker)
+            {
+                newTask.State = TaskState.Blocker;
+                newTask.Blocking = PC.BlockedTask.Id;
+            }
+            else
+                newTask.State = Target;
+
+            await TC.AddTask(newTask);
+            PC.TaskChanged();
+            Title = "";
+            Notes = "";
+        }
+
+        async Task AddNextClicked()
+        {
+            bool isBlocker = true;
+            await AddNewTask(isBlocker);
+        }
+
+        async Task OkClick(bool isBlocker)
+        {
+            await AddNewTask(isBlocker);
+            PC.BlockerDialogOpen = false;
+            PC.AddDialogOpen = false;
+            PC.BlockedTask = null;
+        } }

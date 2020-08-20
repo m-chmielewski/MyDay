@@ -1,0 +1,43 @@
+﻿@inject TasksClient TC
+@inject PresentationController PC
+
+<div class="today-columns-container">
+    <Column ColumnTitle="ToDo" />
+    @if (Blockers.Count != 0)
+    {
+        <Column ColumnTitle="Blockers" />
+        PC.ColumnWidth = "24%";
+    }
+    else
+    {
+        PC.ColumnWidth = "32%";
+    }
+    <Column ColumnTitle="Blocked" />
+    <Column ColumnTitle="Done" />
+</div>
+
+@code {
+    public List<TaskModel>
+  AllTasks
+    { get; set; }
+
+    public List<TaskModel>
+    Blockers
+    {
+        get
+        {
+            return AllTasks.Where(t => t.State == TaskState.Blocker).ToList();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PC.OnTaskChange += StateHasChanged;
+    }
+
+    protected override void OnParametersSet()
+    {
+        AllTasks = TC.AllTasks;
+    }
+}

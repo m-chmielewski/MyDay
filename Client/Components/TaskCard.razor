@@ -1,0 +1,69 @@
+﻿@inject PresentationController PC
+@inject TasksClient TC
+
+<div class="card-container">
+    <div class="card-data-container">
+        <MatH6>@Element.Title</MatH6>
+        <div>@Element.Notes</div>
+    </div>
+    <div class="card-buttons-container">
+        <MatIconButton Icon="delete_outline" @onclick="DeleteClicked" Style="color: #EB0011" />
+        <MatIconButton Icon="arrow_drop_down" Label="Menu" OnClick="@OnClick" RefBack="@buttonForwardRef" />
+        <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
+            <MatList>
+                <MatListItem @onclick="DoneClicked">Done</MatListItem>
+                <MatListItem @onclick="BlockedClicked">Blocked</MatListItem>
+                <MatListItem @onclick="ToDoClicked">To Do</MatListItem>
+                <MatListItem @onclick="BacklogClicked">Backlog</MatListItem>
+            </MatList>
+        </MatMenu>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public TaskModel Element { get; set; }
+
+    ForwardRef buttonForwardRef = new ForwardRef();
+    BaseMatMenu Menu;
+
+    public void OnClick(MouseEventArgs e)
+    {
+        this.Menu.OpenAsync();
+    }
+
+    private async Task DoneClicked()
+    {
+        Element.State = TaskState.Done;
+        await TC.Update(Element);
+        PC.TaskChanged();
+    }
+
+    private async Task BlockedClicked()
+    {
+        Element.State = TaskState.Blocked;
+        await TC.Update(Element);
+        PC.OpenAddBlockerDialog(Element);
+        PC.TaskChanged();
+    }
+
+    private async Task DeleteClicked()
+    {
+        await TC.Delete(Element);
+        PC.TaskChanged();
+    }
+
+    private async Task ToDoClicked()
+    {
+        Element.State = TaskState.ToDo;
+        await TC.Update(Element);
+        PC.TaskChanged();
+    }
+
+    private async Task BacklogClicked()
+    {
+        Element.State = TaskState.Backlog;
+        await TC.Update(Element);
+        PC.TaskChanged();
+    }
+}

@@ -1,0 +1,18 @@
+﻿<h2>Timers</h2>
+<div @onclick="AddTimer">+</div>
+
+@for (int i = 0; i < timersNumber; i++)
+{
+    <TimerSection />
+}
+
+
+@code {
+    public int timersNumber = 0;
+
+    public void AddTimer()
+    {
+        timersNumber++;
+        StateHasChanged();
+    }
+}

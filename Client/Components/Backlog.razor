@@ -1,0 +1,35 @@
+﻿@inject PresentationController PC
+@inject TasksClient TC
+
+<div class="backlog-rows-container">
+    @if (AllTasks != null)
+    {
+        @foreach (var date in AllDates)
+        {
+            <BacklogRow Day="@date" />
+        }
+    }
+</div>
+
+@code{
+    public List<TaskModel> AllTasks { get; set; }
+
+    public List<DateTime> AllDates
+    {
+        get
+        {
+            return AllTasks.OrderByDescending(x => x.CreatedOn).Where(x => x.State == TaskState.Backlog).Select(x => x.CreatedOn).Distinct().ToList();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        AllTasks = TC.AllTasks;
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PC.OnTaskChange += StateHasChanged;
+    }
+}

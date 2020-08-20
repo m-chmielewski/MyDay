@@ -1,0 +1,16 @@
+﻿@inject TimerService TS
+
+<div class="timers-wrapper">
+    <div>@timeleft</div>
+    <button class="set-timer-btn" type="submit" @onclick="SetTimer">Set</button>
+</div>
+
+@code {
+    public string timeleft = "00:00:00";
+
+    public void SetTimer()
+    {
+        timeleft = "05:00:00";
+        StateHasChanged();
+    }
+}

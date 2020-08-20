@@ -1,0 +1,38 @@
+﻿@inject TasksClient TC
+@inject PresentationController PC
+
+<div class="backlog-row">
+    <div class="backlog-row-header">
+        <MatH5>@Day.ToString("dddd, dd.MM.yyyy")</MatH5>
+    </div>
+    <div class="backlog-row-content">
+        @if (AllTasks != null)
+        {
+            @foreach (TaskModel task in Tasks)
+            {
+                <TaskCard Element="task" />
+            }
+        }
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public DateTime Day { get; set; }
+
+    public List<TaskModel> AllTasks { get; set; }
+
+    public List<TaskModel> Tasks => AllTasks.Where(x => x.CreatedOn == Day && x.State == TaskState.Backlog).ToList();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PC.OnTaskChange += StateHasChanged;
+    }
+
+    protected override void OnParametersSet()
+    {
+        AllTasks = TC.AllTasks;
+    }
+}
