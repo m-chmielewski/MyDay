@@ -158,7 +158,7 @@
 
 
 
-.account-content {
+.account-page {
   position: fixed;
   top: 0;
   height: 100vh;
@@ -167,16 +167,42 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: lightgray;
+  background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/account-background.jpg);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/account-background.jpg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
-.login-box {
-  height: 500px;
-  width: 400px;
+.form-container {
+  width: 350px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   background-color: white;
   border-radius: 10px;
+}
+
+.account-header-wrapper {
+  height: 60px;
+}
+
+  .account-header-wrapper h3 {
+    margin: 0;
+  }
+
+.account-form-wrapper {
+  height: 80%;
+  width: 100%;
+}
+
+  .account-form-wrapper a {
+    display: block;
+    margin-top: 10px;
+  }
+
+.validation-message {
+  color: red;
 }

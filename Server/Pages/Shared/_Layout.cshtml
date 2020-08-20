@@ -13,9 +13,11 @@
 
 <body>
     <div class="main">
-        <div class="account-content">
-            @RenderBody()
-            @RenderSection("scripts", required: false)
+        <div class="account-page">
+            <div class="form-container">
+                @RenderBody()
+                @RenderSection("scripts", required: false)
+            </div>
         </div>
     </div>
     <script src="~/Materialize/materialize.min.js"></script>
