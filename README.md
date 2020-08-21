@@ -1,2 +1,2 @@
-#MyDay
-##Blazor WebAssembly personal kanban
+# MyDay
+## Blazor WebAssembly personal kanban
