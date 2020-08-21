@@ -5,6 +5,8 @@ using MyDay.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Linq;
 
 namespace MyDay.Server.Controllers
 {
@@ -22,20 +24,14 @@ namespace MyDay.Server.Controllers
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-      var tasks = await _context.Tasks.ToListAsync();
+      var tasks = await _context.Tasks.Where(t => t.UserId == GetUserId()).ToListAsync();
       return Ok(tasks);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
-    {
-      var task = await _context.Tasks.FirstOrDefaultAsync(a => a.Id == id);
-      return Ok(task);
     }
 
     [HttpPost]
     public async Task<ActionResult<int>> Post(TaskModel task)
     {
+      task.UserId = GetUserId();
       _context.Add(task);
       await _context.SaveChangesAsync();
       return task.Id;
@@ -56,6 +52,11 @@ namespace MyDay.Server.Controllers
       _context.Remove(task);
       await _context.SaveChangesAsync();
       return NoContent();
+    }
+
+    private string GetUserId()
+    {
+      return HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
   }
 }

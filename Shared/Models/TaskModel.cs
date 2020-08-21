@@ -5,6 +5,7 @@ namespace MyDay.Shared.Models
   public class TaskModel
   {
     public int Id { get; set; }
+    public string UserId { get; set; }
     public string Title { get; set; }
     public string Notes { get; set; }
     public TaskState State { get; set; }
