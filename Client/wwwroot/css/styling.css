@@ -25,7 +25,7 @@
   margin: 2px 4px;
 }
 
-.log-out-btn {
+.log-out-btn, .log-in-btn {
   position: fixed !important;
   bottom: 10px;
 }
