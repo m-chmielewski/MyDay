@@ -6,7 +6,9 @@
 <MatThemeProvider Theme="PC.Theme">
 
     <div class="left-bar">
-        <img class="logo-image" src="Logo.png" alt="Logo" />
+        <a href="/">
+            <img class="logo-image" src="Logo.png" alt="Logo" />
+        </a>
         <div class="navigation-wrapper">
             <MatButton Class="nav-btn" Icon="today" Label="Today" @onclick="() => PC.ShowingBacklog = false"></MatButton>
             <MatButton Class="nav-btn" Icon="table_chart" Label="Backlog" @onclick="() => PC.ShowingBacklog = true"></MatButton>
