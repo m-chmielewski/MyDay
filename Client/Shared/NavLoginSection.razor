@@ -1,0 +1,26 @@
+﻿@*Account section of navigation pane with its content based on authentication state*@
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<AuthorizeView>
+    <Authorized>
+        <MatButton Class="nav-btn log-out-btn" Icon="exit_to_app" Label="Log out" @onclick="BeginSignOut"></MatButton>
+    </Authorized>
+    <NotAuthorized>
+        <MatButton Class="nav-btn log-in-btn" Icon="account_box" Label="Log in" @onclick="BeginSignIn"></MatButton>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code{ private async Task BeginSignOut(MouseEventArgs args)
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+
+    private void BeginSignIn(MouseEventArgs args)
+    {
+        Navigation.NavigateTo("authentication/login");
+    } }

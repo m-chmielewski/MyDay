@@ -29,12 +29,12 @@ namespace MyDay.Server.Controllers
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> Post(TaskModel task)
+    public async Task<ActionResult<TaskModel>> Post(TaskModel task)
     {
       task.UserId = GetUserId();
       _context.Add(task);
       await _context.SaveChangesAsync();
-      return task.Id;
+      return task;
     }
 
     [HttpPut]

@@ -1,8 +1,10 @@
 ﻿@inject TasksClient TC
 @inject PresentationController PC
+@*COmponent presenting all tasks planned for the day*@
 
 <div class="today-columns-container">
     <Column ColumnTitle="ToDo" />
+    @*Blockers column is shown only if there are any blockers available - columns width set accordingly*@
     @if (Blockers.Count != 0)
     {
         <Column ColumnTitle="Blockers" />
@@ -17,10 +19,9 @@
 </div>
 
 @code {
-    public List<TaskModel>
-  AllTasks
-    { get; set; }
+    public List<TaskModel> AllTasks { get; set; }
 
+    //Get list of all blockers
     public List<TaskModel>
     Blockers
     {
@@ -33,6 +34,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        //Update this component when tasks are being changed
         PC.OnTaskChange += StateHasChanged;
     }
 

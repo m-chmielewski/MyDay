@@ -3,9 +3,12 @@ using MatBlazor;
 
 namespace MyDay.Client
 {
-  public class ComponentsTheme : MatTheme
+  /// <summary>
+  /// Colors definition for MatBlazor components
+  /// </summary>
+  public class MatComponentsTheme : MatTheme
   {
-    public ComponentsTheme()
+    public MatComponentsTheme()
     {
       Primary = "#009686";
       Secondary = "#F19D00";

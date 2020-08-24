@@ -2,9 +2,10 @@
 @inject PresentationController PC
 @inject SignOutSessionStateManager SignOutManager
 @inject NavigationManager Navigation
+@*Navigation pane and app content container*@
 
+@*MatBlazor theme definition*@
 <MatThemeProvider Theme="PC.Theme">
-
     <div class="left-bar">
         <a href="/">
             <img class="logo-image" src="Logo.png" alt="Logo" />
@@ -13,32 +14,9 @@
             <MatButton Class="nav-btn" Icon="today" Label="Today" @onclick="() => PC.ShowingBacklog = false"></MatButton>
             <MatButton Class="nav-btn" Icon="table_chart" Label="Backlog" @onclick="() => PC.ShowingBacklog = true"></MatButton>
         </div>
-        <AuthorizeView>
-            <Authorized>
-                <MatButton Class="nav-btn log-out-btn" Icon="exit_to_app" Label="Log out" @onclick="BeginSignOut"></MatButton>
-            </Authorized>
-            <NotAuthorized>
-                <MatButton Class="nav-btn log-in-btn" Icon="account_box" Label="Log in" @onclick="BeginSignIn"></MatButton>
-            </NotAuthorized>
-        </AuthorizeView>
+        <NavLoginSection />
     </div>
-    <!--<div class="top-bar">
-
-    </div>
-    <div class="timer-section">
-        <TimerPane />
-    </div>-->
     <div class="content">
         @Body
     </div>
 </MatThemeProvider>
-
-@code{ private async Task BeginSignOut(MouseEventArgs args)
-    {
-        await SignOutManager.SetSignOutState();
-        Navigation.NavigateTo("authentication/logout");
-    }
-    private void BeginSignIn(MouseEventArgs args)
-    {
-        Navigation.NavigateTo("authentication/login");
-    } }

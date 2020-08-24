@@ -1,5 +1,6 @@
 ﻿@inject PresentationController PC
 @inject TasksClient TC
+@*Component representing each task, its data and controls*@
 
 <div class="card-container">
     <div class="card-data-container">
@@ -8,7 +9,8 @@
     </div>
     <div class="card-buttons-container">
         <MatIconButton Icon="delete_outline" @onclick="DeleteClicked" Style="color: #EB0011" />
-        <MatIconButton Icon="arrow_drop_down" Label="Menu" OnClick="@OnClick" RefBack="@buttonForwardRef" />
+        <MatIconButton Icon="arrow_drop_down" Label="Menu" OnClick="@OpenMenu" RefBack="@buttonForwardRef" />
+        @*Menu for changing task state*@
         <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
             <MatList>
                 <MatListItem @onclick="DoneClicked">Done</MatListItem>
@@ -21,16 +23,20 @@
 </div>
 
 @code {
+    //Task represented by the card
     [Parameter]
     public TaskModel Element { get; set; }
 
     ForwardRef buttonForwardRef = new ForwardRef();
     BaseMatMenu Menu;
 
-    public void OnClick(MouseEventArgs e)
+    public void OpenMenu(MouseEventArgs e)
     {
         this.Menu.OpenAsync();
     }
+
+
+    /*** State change handlers ***/
 
     private async Task DoneClicked()
     {

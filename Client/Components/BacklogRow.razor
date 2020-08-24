@@ -1,5 +1,6 @@
 ﻿@inject TasksClient TC
 @inject PresentationController PC
+@*Each row contains tasks created on certain date*@
 
 <div class="backlog-row">
     <div class="backlog-row-header">
@@ -23,11 +24,13 @@
 
     public List<TaskModel> AllTasks { get; set; }
 
+    //All backlog tasks created on ceratin date passed from Backlog component
     public List<TaskModel> Tasks => AllTasks.Where(x => x.CreatedOn == Day && x.State == TaskState.Backlog).ToList();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        //Update this component when tasks are being changed
         PC.OnTaskChange += StateHasChanged;
     }
 

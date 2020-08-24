@@ -6,9 +6,13 @@ using System.Net.Http.Json;
 using System.Collections.ObjectModel;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace MyDay.Client.Singletons
 {
+  /// <summary>
+  /// Object responsible for getting tasks from db, updateing them, etc.
+  /// </summary>
   public class TasksClient
   {
     private readonly HttpClient _client;
@@ -30,8 +34,10 @@ namespace MyDay.Client.Singletons
     public async Task AddTask(TaskModel task)
     {
       var response = await _client.PostAsJsonAsync<TaskModel>("tasks", task);
-      var id = await response.Content.ReadFromJsonAsync<int>();
-      task.Id = id;
+      //Version of new task with task id and user id assigned by backend on db entry creation
+      TaskModel dbTask = await response.Content.ReadFromJsonAsync<TaskModel>();
+      task.Id = dbTask.Id;
+      task.UserId = dbTask.UserId;
       AllTasks.Add(task);
     }
 
